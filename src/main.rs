@@ -1,10 +1,12 @@
-use axum::Router;
+use axum::{
+    routing::get,
+    Router,
+};
 
-fn create_app() -> Router {
-    Router::new()
-        .route("/", get(health_check));
-}
+#[tokio::main]
+async fn main() {
+    let app = Router::new().route("/", get(|| async { "Hoooii" }));
 
-fn main() {
-    let app = create_app();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
